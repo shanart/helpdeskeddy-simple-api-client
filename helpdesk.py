@@ -2,16 +2,18 @@ import base64
 import requests
 import json
 import urllib
-from django.conf import settings
+
+
+HELPDESK_API_KEY = '<static helpdeskeddy api key>'
 
 
 class HelpDeskConnect:
-    def __init__(self, key=settings.HELPDESK_API_KEY):
+    def __init__(self, key=HELPDESK_API_KEY):
         """
         Initializing with default key from app settings file
         """
         self.api_key = base64.b64encode(key.encode('ascii')).decode("utf-8")
-        self.api_root = settings.HELPDESK_API_ROOT
+        self.api_root = HELPDESK_API_ROOT
 
     def headers(self) -> dict:
         """
