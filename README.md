@@ -7,6 +7,12 @@ Note: This is not an official app. I just had to select some data from the syste
 
 Helpdeskeddy API documentation: https://helpdeskeddy.ru/api.html
 
+
+Run tests"
+```sh
+python -m unittest tests/*.py
+```
+
 ## TODO
 - add requirements.txt
 - add tests
