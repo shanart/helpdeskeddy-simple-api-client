@@ -12,8 +12,3 @@ Run tests"
 ```sh
 python -m unittest tests/*.py
 ```
-
-## TODO
-- add requirements.txt
-- add tests
-- Extend methods to cover all fields
