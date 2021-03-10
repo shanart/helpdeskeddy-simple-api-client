@@ -1,8 +1,26 @@
 import requests
-from .helpdesk import HelpDeskConnect
+from helpdesk import HelpDeskConnect
+from schema.tickets import GetTicketsUrlParamsSchema
 
 
 class TicketCRUD(HelpDeskConnect):
+    """
+    Class describe CRUD interactions with the system
+    
+    ...
+    Methods
+    -------
+    ticket_all()
+        Get all
+    ticket_post
+        create new one
+    ticket_get
+        get by
+    ticket_put
+        update 
+    ticket_delete
+        delete
+    """
 
     def ticket_all(self, url_arg: str) -> dict:
         """
