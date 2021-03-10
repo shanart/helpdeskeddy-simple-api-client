@@ -1,6 +1,6 @@
 import requests
-from helpdesk import HelpDeskConnect
-from schema.tickets import GetTicketsUrlParamsSchema
+from .helpdesk import HelpDeskConnect
+from .schema.tickets import GetTicketsUrlParamsSchema
 
 
 class TicketCRUD(HelpDeskConnect):
