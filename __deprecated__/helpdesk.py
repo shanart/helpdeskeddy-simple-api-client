@@ -1,3 +1,8 @@
+"""
+
+NOTE: This file is DEPRECATED. Entry point moved to client.py
+
+"""
 import base64
 import requests
 import json

@@ -25,6 +25,7 @@ class GetTicketsUrlParamsSchema(Schema):
 
     @validates("order_by")
     def validate_order_by(self, value):
+        # date_created{desc}
         available_values = ['date_created',
                             'date_updated',
                             'viewed_by_staff',
