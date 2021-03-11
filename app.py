@@ -17,6 +17,5 @@ settings = {
     'API_ROOT': HELPDESK_API_ROOT
 }
 
-client = Client(settings)
 
-pprint(client.get('/api/v2/tickets/'), indent=4)
+# pprint(client.get_ticket('/api/v2/tickets/'), indent=4)

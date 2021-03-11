@@ -34,11 +34,23 @@ class Client:
         """
         return f'{self.api_root}{url}'
     
-    
-    # HTTP methods
-    def get(self, url) -> dict:
-        """
-        Basic GET request.
-        """
-        r = requests.get(self.url(url), headers=self.headers())
-        return r.json()
+
+    # @validate_<essence name>(url_params)
+    # def get_<essence name>(self, url_params)
+
+    # @validate_<essence name>(payload)
+    # def create_<essence name>(self, payload: dict):
+
+    # @validate_<essence name>(payload)
+    # def update_<essence name>(self, payload: dict):
+
+    # def delete_<essence name>(self, id):
+
+
+    # # HTTP methods
+    # def get(self, url) -> dict:
+    #     """
+    #     Basic GET request.
+    #     """
+    #     r = requests.get(self.url(url), headers=self.headers())
+    #     return r.json()

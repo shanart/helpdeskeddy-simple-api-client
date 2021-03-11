@@ -1,11 +1,13 @@
-""" Schema classes to describe and validate request data"""
+"""
+Schema classes to describe and validate request data 
+in Tickets area of API https://helpdeskeddy.ru/api.html#работа-с-заявками-заявки
+"""
 from marshmallow import Schema, fields, validates, ValidationError
 
 
 class GetTicketsUrlParamsSchema(Schema):
     """
     Schema describe url params on GET Tickets according to documentation
-    https://helpdeskeddy.ru/api.html#работа-с-заявками-заявки
     """
     page = fields.Integer()
     search = fields.String()
@@ -111,6 +113,3 @@ class TicketObject(Schema):
     # массив файлов (необязательный) 
     # Массив приложений
     files = fields.String()
-
-
-    
