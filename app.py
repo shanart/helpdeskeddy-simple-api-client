@@ -3,7 +3,9 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 import requests
+
 from helpdeskeddy import Client
+
 
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
@@ -18,4 +20,6 @@ settings = {
 }
 
 
-# pprint(client.get_ticket('/api/v2/tickets/'), indent=4)
+client = Client(settings)
+pprint(client.get_ticket('order_by=viewed_by_staff{ASC}'), indent=4)
+

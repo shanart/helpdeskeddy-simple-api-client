@@ -1,8 +1,24 @@
-from .base import Essence
+# from .base import Essence
+import requests
 
+class Tickets:
 
-class Ticket(Essence):
-    # TODO: describe all required methods
+    API_ROOT = "/api/v2/tickets/"
+
+    # # HTTP methods
+    def get_ticket(self, url) -> dict:
+        query_url = self.url(self.API_ROOT + '?' + url)
+        r = requests.get(query_url, headers=self.headers())
+        return r.json()
+
+    # def create_ticket(self, payload: dict):
+    #     pass
+
+    # def update_ticket(self, payload: dict):
+    #     pass
+
+    # def delete_ticket(self, id):
+    #     pass
 
     def change_status(self, id):
         """Change ticket status by status id

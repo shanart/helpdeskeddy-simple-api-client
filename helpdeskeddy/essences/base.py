@@ -1,9 +1,13 @@
-import abc
+from abc import ABC, abstractmethod
 
 
-class Essence:
+class Essence(ABC):
 
-    @abs.abstractmethod
+    # https://pymotw.com/3/abc/
+    # __metaclass__ = abc.ABCMeta
+
+
+    @abstractmethod
     def get(self, url):
         """GET method.
 
@@ -15,7 +19,7 @@ class Essence:
         """
         pass
 
-    @abs.abstractmethod
+    @abstractmethod
     def create(self, payload: dict):
         """POST method.
 
@@ -27,7 +31,7 @@ class Essence:
         """
         pass
 
-    @abs.abstractmethod
+    @abstractmethod
     def update(self, payload: dict):
         """UPDATE method. Describe HTTP PUT method.
 
@@ -39,7 +43,7 @@ class Essence:
         """
         pass
 
-    @abs.abstractmethod
+    @abstractmethod
     def delete(self, id):
         """DELETE method.
 

@@ -1,10 +1,12 @@
+from types import FunctionType
 import base64
-import requests
 import json
 import urllib
 
+from .essences import Tickets
 
-class Client:
+
+class Client(Tickets):
     def __init__(self, settings):
 
         if 'API_KEY' not in settings:
@@ -33,7 +35,6 @@ class Client:
         API calls url formatter
         """
         return f'{self.api_root}{url}'
-    
 
     # @validate_<essence name>(url_params)
     # def get_<essence name>(self, url_params)
@@ -45,12 +46,3 @@ class Client:
     # def update_<essence name>(self, payload: dict):
 
     # def delete_<essence name>(self, id):
-
-
-    # # HTTP methods
-    # def get(self, url) -> dict:
-    #     """
-    #     Basic GET request.
-    #     """
-    #     r = requests.get(self.url(url), headers=self.headers())
-    #     return r.json()
