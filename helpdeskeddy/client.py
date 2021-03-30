@@ -37,7 +37,9 @@ for name, module in resources.__dict__.items():
 
 
 class Client(object):
-
+    """
+    General client class that hold application resources
+    """
     def __init__(self, settings=None):
         if settings is not None:
             if 'API_KEY' not in settings.keys():
@@ -47,7 +49,7 @@ class Client(object):
                 raise ValueError('Settings should has "API_ROOT" key')
 
         self.api_key = base64.b64encode(settings['API_KEY'].encode('ascii')).decode("utf-8")
-        self.api_root = settings['API_ROOT']
+        self.api_root = settings['API_ROOT'] + '/api/v2'
 
         for name, Klass in RESOURCE_CLASSES.items():
             setattr(self, name, Klass(self))
@@ -70,3 +72,9 @@ class Client(object):
         API calls url formatter
         """
         return f'{self.api_root}{url}'
+    
+    def get(self, query, **options):
+        return requests.get(self.url(query), headers=self.headers())
+
+    def to_url_params(self, params):
+        return urllib.parse.urlencode(params)

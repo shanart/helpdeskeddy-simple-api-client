@@ -20,5 +20,5 @@ config = {
 
 client = Client(config)
 
-pprint(client.tickets.__dict__)
-pprint(client.comments.__dict__)
+req = client.tickets.get({"user_id": 18})
+print(req.json())
