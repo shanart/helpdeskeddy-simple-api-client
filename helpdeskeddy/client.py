@@ -1,33 +1,68 @@
-from types import FunctionType
+"""
+
+NOTE: Usage example
+
+from helpdesckeddy import Client
+
+client = Client(config)
+
+client.tickets.get(id)
+client.tickets.update(dict)
+client.tickets.delete(id)
+client.tickets.create(dict)
+
+client.messages.get(ticket_id)
+client.messages.create(ticket_id, dict)
+client.messages.update(ticket_id, dict)
+
+"""
+
+from types import ModuleType
+from pprint import pprint
 import base64
 import json
 import urllib
+import requests
+import string
 
-from .essences import Tickets
+from . import resources
 
 
-class Client(Tickets):
-    def __init__(self, settings):
+# Save all modules from resources package in dict
+RESOURCE_CLASSES = {}
+for name, module in resources.__dict__.items():
+    classified_name = string.capwords(name, '_').replace('_', '')
+    if isinstance(module, ModuleType) and classified_name in module.__dict__:
+        RESOURCE_CLASSES[name] = module.__dict__[classified_name]
 
-        if 'API_KEY' not in settings:
-            raise ValueError('Settings should has "API_KEY" key')
-        
-        if 'API_ROOT' not in settings:
-            raise ValueError('Settings should has "API_ROOT" key')
+
+class Client(object):
+
+    def __init__(self, settings=None):
+        if settings is not None:
+            if 'API_KEY' not in settings.keys():
+                raise ValueError('Settings should has "API_KEY" key')
             
+            if 'API_ROOT' not in settings.keys():
+                raise ValueError('Settings should has "API_ROOT" key')
+
         self.api_key = base64.b64encode(settings['API_KEY'].encode('ascii')).decode("utf-8")
         self.api_root = settings['API_ROOT']
 
+        for name, Klass in RESOURCE_CLASSES.items():
+            setattr(self, name, Klass(self))
 
     def headers(self) -> dict:
         """
         Create authorization headers:
         Docs: https://helpdeskeddy.ru/api.html#обзор
         """
+        
         return {
             'Authorization': f'Basic {self.api_key}',
-            'Cache-Control': 'no-cache',
-            'Content-Type': 'application/json'
+            'Cache-Control': 'no-cache'      
+            # TODO: What content-type should be in multipart/form-data requests?
+            # 'Content-Type': 'application/json'
         }
 
     def url(self, url: str) -> str:
@@ -35,14 +70,3 @@ class Client(Tickets):
         API calls url formatter
         """
         return f'{self.api_root}{url}'
-
-    # @validate_<essence name>(url_params)
-    # def get_<essence name>(self, url_params)
-
-    # @validate_<essence name>(payload)
-    # def create_<essence name>(self, payload: dict):
-
-    # @validate_<essence name>(payload)
-    # def update_<essence name>(self, payload: dict):
-
-    # def delete_<essence name>(self, id):
