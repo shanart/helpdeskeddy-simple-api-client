@@ -1,10 +1,12 @@
 from pprint import pprint
 import os
+import json
 from dotenv import load_dotenv
 from pathlib import Path
 import requests
 
-from helpdeskeddy import Client 
+from helpdeskeddy import Client
+from helpdeskeddy.client import RESOURCE_CLASSES
 
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
@@ -20,5 +22,7 @@ config = {
 
 client = Client(config)
 
-req = client.tickets.get({"user_id": 18})
-print(req.json())
+# req = client.tickets.get({"user_list": "18,14"})
+# tickets = req.json()["data"]
+# for t in tickets.keys():
+#     print(tickets[t]['id'])

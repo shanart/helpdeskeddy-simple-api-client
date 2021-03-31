@@ -1,22 +1,3 @@
-"""
-
-NOTE: Usage example
-
-from helpdesckeddy import Client
-
-client = Client(config)
-
-client.tickets.get(id)
-client.tickets.update(dict)
-client.tickets.delete(id)
-client.tickets.create(dict)
-
-client.messages.get(ticket_id)
-client.messages.create(ticket_id, dict)
-client.messages.update(ticket_id, dict)
-
-"""
-
 from types import ModuleType
 from pprint import pprint
 import base64
@@ -32,6 +13,7 @@ from . import resources
 RESOURCE_CLASSES = {}
 for name, module in resources.__dict__.items():
     classified_name = string.capwords(name, '_').replace('_', '')
+    print(classified_name)
     if isinstance(module, ModuleType) and classified_name in module.__dict__:
         RESOURCE_CLASSES[name] = module.__dict__[classified_name]
 
@@ -59,12 +41,9 @@ class Client(object):
         Create authorization headers:
         Docs: https://helpdeskeddy.ru/api.html#обзор
         """
-        
         return {
             'Authorization': f'Basic {self.api_key}',
             'Cache-Control': 'no-cache'      
-            # TODO: What content-type should be in multipart/form-data requests?
-            # 'Content-Type': 'application/json'
         }
 
     def url(self, url: str) -> str:
@@ -73,8 +52,54 @@ class Client(object):
         """
         return f'{self.api_root}{url}'
     
-    def get(self, query, **options):
+    def get(self, query):
         return requests.get(self.url(query), headers=self.headers())
+
+    def post(self, url, data):
+        # TODO: handle files
+        """
+        # ================ WORKING EXAMPLE ================
+        # requests_toolbelt may be very usefull. RTFM - https://toolbelt.readthedocs.io/en/latest/
+        from requests_toolbelt import MultipartEncoder
+        import magic # is it okay to install whole lib to use only 1 function?
+
+        def get_mime_type(file):
+            # Get MIME by reading the header of the file
+            initial_pos = file.tell()
+            file.seek(0)
+            # is it okay to install whole lib ( python-magic ) to use only 1 function?
+            mime_type = magic.from_buffer(file.read(1024), mime=True)
+            file.seek(initial_pos)
+            return mime_type
+
+        postdata = {}
+        idx = 0
+        # read request data
+        for k in fields.keys():
+            if 'files' in k:
+                # if key starts with "files"
+                content_type = get_mime_type(fields[k])
+                file = fields[k]
+
+                # save it like a file
+                postdata[f'files[{idx}]'] = (
+                    file.name, # file name
+                    file.file, # file object
+                    content_type
+                )
+                idx += 1
+            else:
+                postdata[k] = str(fields[k])
+
+        # prepeare proper formatted data
+        m = MultipartEncoder(postdata)
+        # send reqeust
+        r = requests.post(self.url(f'/api/v2/tickets'), 
+                            data=m,
+                            headers={'Authorization': f'Basic {self.api_key}',
+                                     'Content-Type': m.content_type })
+        """
+        return requests.post(self.url(url), data=data, headers=self.headers())
 
     def to_url_params(self, params):
         return urllib.parse.urlencode(params)

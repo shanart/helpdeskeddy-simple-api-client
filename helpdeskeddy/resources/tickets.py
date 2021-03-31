@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, validates, ValidationError
-from .abstract import Resource
+from ..utils.abstract import Resource
 
 
 class GetTicketsUrlParamsSchema(Schema):
@@ -127,10 +127,10 @@ class Tickets(Resource):
                 try:
                     result = GetTicketsUrlParamsSchema().load(query)
                     params = self.client.to_url_params(result)
-                    return self.client.get(self.RESOURCE_ROOT + params)
+                    return self.client.get(self.RESOURCE_ROOT + '?' + params)
                 except ValidationError as e:
                     # TODO: exceptions
-                    raise "unknow field"
+                    raise e.messages
                     # print(e.messages)
                     # print(e.valid_data)
 
@@ -140,8 +140,14 @@ class Tickets(Resource):
 
         return self.client.get(self.RESOURCE_ROOT)
 
-    def post(self):
-        pass
+    def post(self, data):
+        try:
+            result = TicketObject().load(data)
+            validated_data = self.client.to_url_params(result)
+            return self.client.post(self.RESOURCE_ROOT, validated_data)
+        except ValidationError as e:
+            # TODO: exceptions
+            raise e.messages
 
     def put(self):
         pass
