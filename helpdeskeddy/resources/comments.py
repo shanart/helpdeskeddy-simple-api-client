@@ -1,4 +1,4 @@
-from .abstract import Resource
+from ..utils.abstract import Resource
 
 class Comments(Resource):
 
