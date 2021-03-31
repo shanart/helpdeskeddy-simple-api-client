@@ -1,4 +1,3 @@
-import os
 import base64
 import json
 import urllib
@@ -74,6 +73,3 @@ class Client(object):
     def get_mime_type(self, file):
         mime_type = magic.from_file(file, mime=True)
         return mime_type
-
-    def get_file_name(self, path):
-        return os.path.basename(path)

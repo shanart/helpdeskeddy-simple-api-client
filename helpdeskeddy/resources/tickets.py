@@ -152,7 +152,7 @@ class Tickets(Resource):
                     for i in range(len(validated_data['files'])):
                         file_item = validated_data['files'][i]
                         content_type = self.client.get_mime_type(file_item)
-                        file_name = self.client.get_file_name(file_item)
+                        file_name = file_item.split("/")[-1:][0]
                         postdata[f'files[{i}]'] = (
                             file_name,
                             open(file_item, 'rb'),
