@@ -22,7 +22,17 @@ config = {
 
 client = Client(config)
 
-# req = client.tickets.get({"user_list": "18,14"})
+attachment = open("./media/attachment.jpeg", "rb")
+
+ticket_post_data = {
+    "title": "api test data 4",
+    "description": "api test data",
+    "files": [attachment]
+}
+
+req = client.tickets.post(ticket_post_data)
+print(req.json())
+
 # tickets = req.json()["data"]
 # for t in tickets.keys():
 #     print(tickets[t]['id'])

@@ -87,15 +87,15 @@ class TicketObject(Schema):
     # Если не задан ID владельца заявки, то для создания заявки будет использоваться э-почта пользователя, если пользователь не существует, то он будет автоматически создан
     user_email = fields.String()
 
-    # массив почтовых ящиков (необязательный) 
+    # массив почтовых ящиков (необязательный)
     # Копия письма
     cc = fields.String()
 
-    # массив почтовых ящиков (необязательный) 
+    # массив почтовых ящиков (необязательный)
     # Скрытая копия письма
     bcc = fields.String()
 
-    # массив user_id (необязательный) 
+    # массив user_id (необязательный)
     # Список пользователей следящих за заявкой, пользователь должен быть сотрудником.
     followers = fields.String()
 
@@ -107,9 +107,9 @@ class TicketObject(Schema):
     # Массив индивидуальных полей заявки, пример: custom_fields[field_id] = value, в случае иерархического поля, необходимо указывать уровень custom_fields[field_id][level] = value
     custom_fields = fields.String()
 
-    # массив файлов (необязательный) 
+    # массив файлов (необязательный)
     # Массив приложений
-    files = fields.String()
+    files = fields.List(fields.Raw())
 
 
 class Tickets(Resource):
@@ -142,15 +142,35 @@ class Tickets(Resource):
 
     def post(self, data):
         try:
-            result = TicketObject().load(data)
-            validated_data = self.client.to_url_params(result)
-            return self.client.post(self.RESOURCE_ROOT, validated_data)
+            validated_data = TicketObject().load(data)
+
+            # Preapare incomming data to POST
+            postdata = {}
+            idx = 0
+            # read request data
+            for k in validated_data.keys():
+                if k == 'files':
+                    for f in validated_data['files']:
+                        # if key starts with "files"
+                        # TODO: check maximum size if needed ( use **options )
+                        content_type = self.client.get_mime_type(f)
+
+                        postdata[f'files[{idx}]'] = (
+                            f.name,  # file name
+                            f,  # file object
+                            content_type
+                        )
+                        idx += 1
+                else:
+                    postdata[k] = str(validated_data[k])
+
+            return self.client.post(self.RESOURCE_ROOT, postdata)
         except ValidationError as e:
             # TODO: exceptions
             raise e.messages
 
     def put(self):
         pass
-    
+
     def delete(self):
         pass
