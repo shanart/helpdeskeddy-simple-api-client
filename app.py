@@ -22,16 +22,17 @@ config = {
 
 client = Client(config)
 
-attachment = open("./media/attachment.jpeg", "rb")
+attachment = "./media/attachment.jpeg"
 
 ticket_post_data = {
-    "title": "api test data 4",
+    "title": "api test data 6",
     "description": "api test data",
-    "files": [attachment]
+    "description2": "api test data",
 }
 
 req = client.tickets.post(ticket_post_data)
-print(req.json())
+
+print(req)
 
 # tickets = req.json()["data"]
 # for t in tickets.keys():

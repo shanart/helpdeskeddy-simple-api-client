@@ -146,28 +146,24 @@ class Tickets(Resource):
 
             # Preapare incomming data to POST
             postdata = {}
-            idx = 0
             # read request data
             for k in validated_data.keys():
                 if k == 'files':
-                    for f in validated_data['files']:
-                        # if key starts with "files"
-                        # TODO: check maximum size if needed ( use **options )
-                        content_type = self.client.get_mime_type(f)
-
-                        postdata[f'files[{idx}]'] = (
-                            f.name,  # file name
-                            f,  # file object
+                    for i in range(len(validated_data['files'])):
+                        file_item = validated_data['files'][i]
+                        content_type = self.client.get_mime_type(file_item)
+                        file_name = self.client.get_file_name(file_item)
+                        postdata[f'files[{i}]'] = (
+                            file_name,
+                            open(file_item, 'rb'),
                             content_type
                         )
-                        idx += 1
                 else:
                     postdata[k] = str(validated_data[k])
-
+            # return postdata
             return self.client.post(self.RESOURCE_ROOT, postdata)
         except ValidationError as e:
-            # TODO: exceptions
-            raise e.messages
+            return e.messages
 
     def put(self):
         pass

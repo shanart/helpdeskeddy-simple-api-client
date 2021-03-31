@@ -1,3 +1,4 @@
+import os
 import base64
 import json
 import urllib
@@ -21,6 +22,7 @@ for name, module in resources.__dict__.items():
 
 
 class Client(object):
+    tickets = None
     """
     General client class that hold application resources
     """
@@ -60,16 +62,18 @@ class Client(object):
         return requests.get(self.url(query), headers=self.headers())
 
     def post(self, url, data):
-        print(f"Log:\n{self.url(f'/api/v2/tickets')}")
         encoded_data = MultipartEncoder(data)
         return requests.post(self.url(url),
-                             data=encoded_data,
-                             headers={'Authorization': f'Basic {self.api_key}',
-                                      'Content-Type': encoded_data.content_type})
+                        data=encoded_data,
+                        headers={'Authorization': f'Basic {self.api_key}',
+                                'Content-Type': encoded_data.content_type})
 
     def to_url_params(self, params):
         return urllib.parse.urlencode(params)
 
     def get_mime_type(self, file):
-        mime_type = magic.from_buffer(file.read(1024), mime=True)
+        mime_type = magic.from_file(file, mime=True)
         return mime_type
+
+    def get_file_name(self, path):
+        return os.path.basename(path)
