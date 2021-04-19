@@ -168,5 +168,9 @@ class Tickets(Resource):
     def put(self):
         pass
 
-    def delete(self):
-        pass
+    def delete(self, id:int):
+        """
+        Удалить заявку
+        https://helpdeskeddy.ru/api.html#работа-с-заявками-заявки-delete
+        """
+        return self.client.delete(self.RESOURCE_ROOT + str(id))
