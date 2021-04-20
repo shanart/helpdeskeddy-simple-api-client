@@ -21,10 +21,11 @@ for name, module in resources.__dict__.items():
 
 
 class Client(object):
-    tickets = None
     """
     General client class that hold application resources
     """
+    
+    tickets = None
 
     def __init__(self, settings=None):
         if settings is not None:
@@ -63,6 +64,13 @@ class Client(object):
     def post(self, url, data):
         encoded_data = MultipartEncoder(data)
         return requests.post(self.url(url),
+                        data=encoded_data,
+                        headers={'Authorization': f'Basic {self.api_key}',
+                                'Content-Type': encoded_data.content_type})
+
+    def put(self, url, data):
+        encoded_data = MultipartEncoder(data)
+        return requests.put(self.url(url),
                         data=encoded_data,
                         headers={'Authorization': f'Basic {self.api_key}',
                                 'Content-Type': encoded_data.content_type})

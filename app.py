@@ -25,15 +25,10 @@ client = Client(config)
 attachment = "./media/attachment.jpeg"
 
 ticket_post_data = {
-    "title": "api test data 6",
-    "description": "api test data",
-    "description2": "api test data",
+    "title": "api test data 15",
 }
 
-req = client.tickets.post(ticket_post_data)
+req = client.tickets.put(83, ticket_post_data)
 
 print(req)
-
-# tickets = req.json()["data"]
-# for t in tickets.keys():
-#     print(tickets[t]['id'])
+print(req.text)

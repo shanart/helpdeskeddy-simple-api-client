@@ -141,6 +141,10 @@ class Tickets(Resource):
         return self.client.get(self.RESOURCE_ROOT)
 
     def post(self, data):
+        """
+        Create new ticket
+        https://helpdeskeddy.ru/api.html#работа-с-заявками-заявки-post
+        """
         try:
             validated_data = TicketObject().load(data)
 
@@ -148,7 +152,7 @@ class Tickets(Resource):
             postdata = {}
             # read request data
             for k in validated_data.keys():
-                if k == 'files':
+                if 'files' in k:
                     for i in range(len(validated_data['files'])):
                         file_item = validated_data['files'][i]
                         content_type = self.client.get_mime_type(file_item)
@@ -160,13 +164,37 @@ class Tickets(Resource):
                         )
                 else:
                     postdata[k] = str(validated_data[k])
-            # return postdata
             return self.client.post(self.RESOURCE_ROOT, postdata)
         except ValidationError as e:
             return e.messages
 
-    def put(self):
-        pass
+    def put(self, id, data):
+        """
+        Update tickets
+        https://helpdeskeddy.ru/api.html#работа-с-заявками-заявки-put
+        """
+        try:
+            validated_data = TicketObject().load(data)
+
+            # Preapare incomming data to POST
+            postdata = {}
+            # read request data
+            for k in validated_data.keys():
+                if 'files' in k:
+                    for i in range(len(validated_data['files'])):
+                        file_item = validated_data['files'][i]
+                        content_type = self.client.get_mime_type(file_item)
+                        file_name = file_item.split("/")[-1:][0]
+                        postdata[f'files[{i}]'] = (
+                            file_name,
+                            open(file_item, 'rb'),
+                            content_type
+                        )
+                else:
+                    postdata[k] = str(validated_data[k])
+            return self.client.put(self.RESOURCE_ROOT + str(id), postdata)
+        except ValidationError as e:
+            return e.messages
 
     def delete(self, id:int):
         """
